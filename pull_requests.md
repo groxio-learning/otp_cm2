@@ -1,2 +1,3 @@
 - Bruce Tate
+- Jaemin Shim
 - Osman Medzhytov
