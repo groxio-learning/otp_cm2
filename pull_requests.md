@@ -1,2 +1,2 @@
 - Bruce Tate
--
+- Jaemin Shim
