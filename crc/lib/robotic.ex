@@ -3,7 +3,17 @@ defmodule Robotic do
 
   def new(p, o), do: %__MODULE__{position: p, orientation: o}
 
-  def turn_left(%Robotic{orientation: orientation} = robot) do
+  def move(robot, :left), do: turn_left(robot)
+  def move(robot, :right), do: turn_right(robot)
+  def move(robot, :forward), do: forward(robot)
+
+  def humanize(robot) do
+    "at #{inspect(robot.position)} facing #{robot.orientation}"
+  end
+
+  def log(robot), do: robot |> IO.inspect(label: "Robot Position and Orientation")
+
+  defp turn_left(%Robotic{orientation: orientation} = robot) do
     case orientation do
       :north -> %{robot | orientation: :west}
       :south -> %{robot | orientation: :east}
@@ -12,7 +22,7 @@ defmodule Robotic do
     end
   end
 
-  def turn_right(%Robotic{orientation: orientation} = robot) do
+  defp turn_right(%Robotic{orientation: orientation} = robot) do
     case orientation do
       :north -> %{robot | orientation: :east}
       :south -> %{robot | orientation: :west}
@@ -26,7 +36,7 @@ defmodule Robotic do
   # defp forward({x, y},:east), do: %{robot | position: {x + 1, y}}
   # defp forward({x, y},:west), do: %{robot | position: {x - 1, y}}
 
-  def forward(%Robotic{orientation: orientation, position: {x, y}} = robot) do
+  defp forward(%Robotic{orientation: orientation, position: {x, y}} = robot) do
     case orientation do
       :north -> %{robot | position: {x, y + 1}}
       :south -> %{robot | position: {x, y - 1}}
