@@ -5,34 +5,39 @@ defmodule RoboticTest do
     assert %Robotic{} = Robotic.new({0, 0}, :north)
   end
 
-  test "turn_left" do
+  test "move turn_left" do
     robot = %Robotic{orientation: :east}
-    assert %{orientation: :north} = Robotic.turn_left(robot)
+    assert %{orientation: :north} = Robotic.move(robot, :left)
   end
 
-  test "turn_right" do
+  test "move turn_right" do
     robot = %Robotic{orientation: :east}
-    assert %{orientation: :south} = Robotic.turn_right(robot)
+    assert %{orientation: :south} = Robotic.move(robot, :right)
   end
 
-  test "forward" do
+  test "move forward" do
     robot = %Robotic{orientation: :east, position: {0, 0}}
-    assert %{position: {1, 0}} = Robotic.forward(robot)
+    assert %{position: {1, 0}} = Robotic.move(robot, :forward)
   end
 
   test "forward forward backward" do
-    robot =
-      %Robotic{orientation: :north, position: {0, 0}}
-      |> Robotic.forward()
-      |> assert_key(:position, {0, 1})
-      |> Robotic.forward()
-      |> assert_key(:position, {0, 2})
-      |> Robotic.turn_left()
-      |> assert_key(:orientation, :west)
-      |> Robotic.turn_left()
-      |> assert_key(:orientation, :south)
-      |> Robotic.forward()
-    assert %{position: {0, 1}, orientation: :south} = robot
+    %Robotic{orientation: :north, position: {0, 0}}
+    |> Robotic.move(:forward)
+    |> assert_key(:position, {0, 1})
+    |> Robotic.move(:forward)
+    |> assert_key(:position, {0, 2})
+    |> Robotic.move(:left)
+    |> assert_key(:orientation, :west)
+    |> Robotic.move(:left)
+    |> assert_key(:orientation, :south)
+    |> Robotic.move(:forward)
+    |> assert_key(position: {0, 1}, orientation: :south)
+  end
+
+  defp assert_key(robot, list) do
+    Enum.reduce(list, robot, fn {key, value}, robot ->
+      assert_key(robot, key, value)
+    end)
   end
 
   defp assert_key(robot, key, expected) do
