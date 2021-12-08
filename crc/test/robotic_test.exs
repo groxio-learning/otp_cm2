@@ -34,6 +34,14 @@ defmodule RoboticTest do
     |> assert_key(position: {0, 1}, orientation: :south)
   end
 
+  test "move all!!!" do
+    moves = [:forward, :forward, :left, :left, :forward]
+
+    %Robotic{orientation: :north, position: {0, 0}}
+    |> Robotic.move_all(moves)
+    |> assert_key(position: {0, 1}, orientation: :south)
+  end
+
   defp assert_key(robot, list) do
     Enum.reduce(list, robot, fn {key, value}, robot ->
       assert_key(robot, key, value)
