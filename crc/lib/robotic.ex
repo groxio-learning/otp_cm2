@@ -7,6 +7,10 @@ defmodule Robotic do
   def move(robot, :right), do: turn_right(robot)
   def move(robot, :forward), do: forward(robot)
 
+  def move_all(robot, moves) do
+    Enum.reduce(moves, robot, fn move, robot -> move(robot, move) end)
+  end
+
   def humanize(robot) do
     "at #{inspect(robot.position)} facing #{robot.orientation}"
   end
