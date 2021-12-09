@@ -1,22 +1,22 @@
 defmodule Gc.Board do
-  defstruct [:answer, :guess, :number_of_try]
+  defstruct [:answer, :guesses]
 
-  def new(), do: %__MODULE__{answer: get_random_numbers(), guess: [], number_of_try: 0}
+  def new(answer \\ get_random_numbers()),
+    do: %__MODULE__{answer: answer, guesses: []}
 
   defp get_random_numbers() do
-    numbers = [1,2,3,4,5,6,7,8]
-    answer = []
-    set_random_numbers(numbers, answer)
+    1..8 |> Enum.shuffle() |> Enum.take(4)
   end
 
-  def set_random_numbers(numbers, answer) do
-    if length(answer) < 4 do
-      random_number = Enum.random(numbers)
-      answer = answer ++ [random_number]
-      numbers = List.delete(numbers, random_number)
-      set_random_numbers(numbers, answer)
-    else
-      answer
-    end
+  def move(board, guess) do
+    %{board | guesses: [guess | board.guesses]}
+  end
+
+  def show(_board) do
+    """
+    1 2 3 4 | RRW
+    1 2 3 4 | RRW
+    ...
+    """
   end
 end
