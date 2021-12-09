@@ -15,6 +15,18 @@ defmodule Server do
   def handle_cast({:move, action}, robot) do
     {:noreply, Robotic.move(robot, action)}
   end
+
+  def start_link(default) when is_list(default) do
+    GenServer.start_link(__MODULE__, {{0,0}, :north})
+  end
+
+  def move(pid, direction) do
+    GenServer.cast(pid, {:move, direction})
+  end
+
+  def status(pid) do
+    GenServer.call(pid, :status)
+  end
 end
 
 
