@@ -12,11 +12,32 @@ defmodule Gc.Board do
     %{board | guesses: [guess | board.guesses]}
   end
 
-  def show(_board) do
-    """
-    1 2 3 4 | RRW
-    1 2 3 4 | RRW
-    ...
-    """
+  def show(board) do
+    board.guesses
+    |> Enum.map(& row(&1, board.answer))
+    |> Enum.join("\n")
+    |> Kernel.<>("\n")
+    |> Kernel.<>(status(board))
+  end
+
+  def status(%{guesses: guesses} = board) do
+    cond do
+      won?(board) ->
+        "Congratulation you win!"
+      guesses |> Enum.count > 10 ->
+        "Unfortunately you lost("
+      true ->
+        "Still playing"
+    end
+  end
+
+  defp won?(%{answer: answer, guesses: [answer | _rest]}), do: true
+  defp won?(_board), do: false
+
+  defp row(guess, answer) do
+    score = Gc.Score.new(answer, guess)
+    |> Gc.Score.show()
+    guess = guess |> Enum.join(" ")
+    "#{guess} | #{score}"
   end
 end
