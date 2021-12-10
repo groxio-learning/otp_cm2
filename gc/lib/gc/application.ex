@@ -7,13 +7,15 @@ defmodule Gc.Application do
 
   @impl true
   def start(_type, _args) do
+    IO.puts("Starting application")
     children = [
-      {Gc.Server, []}
+      {Gc.Server, :osman},
+      {Gc.Server, :bruce},
+      {Gc.Server, :raju}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Gc.Supervisor]
-    Supervisor.start_link(children, opts)
+    Supervisor.start_link(children, strategy: :rest_for_one, name: Gc.Supervisor)
   end
 end
