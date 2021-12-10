@@ -16,6 +16,10 @@ defmodule Gc do
     :world
   end
 
+  def new(name) do
+    DynamicSupervisor.start_child(:games, {Gc.Server, name})
+  end
+
   def move(name, guess) do
     Gc.Server.move(name, guess)
   end

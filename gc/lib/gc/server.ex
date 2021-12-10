@@ -2,9 +2,9 @@ defmodule Gc.Server do
   use GenServer
   alias Gc.Board
   @impl true
-  def init(name) do
-    IO.puts("Starting #{name}")
-    {:ok, Board.new()}
+  def init(opts) do
+    IO.puts("Starting #{opts.name}")
+    {:ok, Board.new(Map.delete(opts, :name))}
   end
 
   @impl true
@@ -20,8 +20,8 @@ defmodule Gc.Server do
   end
 
   #CLIENT'S API
-  def start_link(name) do
-    GenServer.start_link(__MODULE__,  name, name: name)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__,  opts, name: opts.name)
   end
 
   def die(pid \\ __MODULE__) do
@@ -35,11 +35,11 @@ defmodule Gc.Server do
     :ok
   end
 
-  def child_spec(name) do
-    IO.puts("Fetching child's spec for #{name}")
+  def child_spec(opts) do
+    IO.puts("Fetching child's spec for #{opts.name}")
     %{
-      id: name,
-      start: {__MODULE__, :start_link, [name]}
+      id: opts.name,
+      start: {__MODULE__, :start_link, [opts]}
     }
   end
 
