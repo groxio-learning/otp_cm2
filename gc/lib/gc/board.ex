@@ -1,8 +1,19 @@
 defmodule Gc.Board do
-  defstruct [:answer, :guesses]
+  defstruct [:answer, :guesses, :total_moves]
 
-  def new(answer \\ get_random_numbers()),
-    do: %__MODULE__{answer: answer, guesses: []}
+  @default_options %{
+    total_moves: 10,
+    guess_size: 4,
+    allow_dups: false
+  }
+
+  def new(options \\ @default_options) do
+    %__MODULE__{
+      answer: get_random_numbers(options.guess_size, options.allow_dups),
+      guesses: [],
+      total_moves: options.total_moves
+    }
+  end
 
   def move(board, guess) do
     %{board | guesses: [guess | board.guesses]}
@@ -16,20 +27,21 @@ defmodule Gc.Board do
     |> Kernel.<>(status(board))
   end
 
-  def status(%{guesses: guesses} = board) do
+  def status(%{guesses: guesses, total_moves: total_moves} = board) do
     cond do
       won?(board) ->
         "Congratulation you win!"
-      guesses |> Enum.count > 10 ->
+      guesses |> Enum.count > total_moves ->
         "Unfortunately you lost("
       true ->
         "Still playing"
     end
   end
 
-  defp get_random_numbers() do
-    1..8 |> Enum.shuffle() |> Enum.take(4)
-  end
+  defp get_random_numbers(guess_size, true), do:
+    Stream.repeatedly(fn -> :rand.uniform(8) end) |> Enum.take(guess_size)
+  defp get_random_numbers(guess_size, false), do:
+    1..8 |> Enum.shuffle() |> Enum.take(guess_size)
 
   defp won?(%{answer: answer, guesses: [answer | _rest]}), do: true
   defp won?(_board), do: false
