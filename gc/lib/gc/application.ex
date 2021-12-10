@@ -8,10 +8,14 @@ defmodule Gc.Application do
   @impl true
   def start(_type, _args) do
     IO.puts("Starting application")
+    # children = [
+    #   {Gc.Server, :osman},
+    #   {Gc.Server, :bruce},
+    #   {Gc.Server, :raju}
+    # ]
+
     children = [
-      {Gc.Server, :osman},
-      {Gc.Server, :bruce},
-      {Gc.Server, :raju}
+      {DynamicSupervisor, strategy: :one_for_one, name: :games}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
