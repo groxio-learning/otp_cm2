@@ -15,4 +15,8 @@ defmodule Gc do
   def hello do
     :world
   end
+
+  def move(name, guess) do
+    Gc.Server.move(name, guess)
+  end
 end

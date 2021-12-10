@@ -4,10 +4,6 @@ defmodule Gc.Board do
   def new(answer \\ get_random_numbers()),
     do: %__MODULE__{answer: answer, guesses: []}
 
-  defp get_random_numbers() do
-    1..8 |> Enum.shuffle() |> Enum.take(4)
-  end
-
   def move(board, guess) do
     %{board | guesses: [guess | board.guesses]}
   end
@@ -29,6 +25,10 @@ defmodule Gc.Board do
       true ->
         "Still playing"
     end
+  end
+
+  defp get_random_numbers() do
+    1..8 |> Enum.shuffle() |> Enum.take(4)
   end
 
   defp won?(%{answer: answer, guesses: [answer | _rest]}), do: true
